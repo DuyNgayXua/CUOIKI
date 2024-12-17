@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm sản phẩm mới</title>
+	<link th:href="@{~/styles/bootstrap.min.css}" rel="stylesheet">
+	<link th:href="@{~/styles/main.css}" rel="stylesheet">
+</head>
+<body>
+    <h1 th:text="${product.id != null && product.id > 0 ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm mới'}"> Thêm sản phẩm mới</h1>
+	<div th:if="${param.success}">
+					<div class="alert alert-info">You have successfully add producted!</div>
+	</div>	
+    <form method="post" th:action="@{/add}" th:object="${product}" >
+        <!-- ID (ẩn, tự động) -->
+        <input type="hidden" th:field="*{id}" />
+        <!-- Code -->
+        <div>
+            <label for="code">Mã sản phẩm (code):</label>
+            <input type="text" id="code" th:field="*{code}" required />
+			<p th:errors="*{code}" class="text-danger" th:if="${#fields.hasErrors('code')}"></p>
+        </div>
+        <!-- Name -->
+        <div>
+            <label for="name">Tên sản phẩm:</label>
+            <input type="text" id="name" th:field="*{name}" required />
+			<p th:errors="*{name}" class="text-danger" th:if="${#fields.hasErrors('name')}"></p>
+        </div>
+        <!-- Description -->
+        <div>
+            <label for="description">Mô tả:</label>
+            <textarea id="description" th:field="*{description}"></textarea>
+			<p th:errors="*{description}" class="text-danger" th:if="${#fields.hasErrors('description')}"></p>
+        </div>
+        <!-- Giá -->
+        <div>
+            <label for="price">Giá:</label>
+            <input type="number" id="price" th:field="*{price}" required />
+			<p th:errors="*{price}" class="text-danger" th:if="${#fields.hasErrors('price')}"></p>
+        </div>
+        <!-- Ngày đăng ký -->
+        <div>
+            <label for="registerDate">Ngày đăng ký:</label>
+            <input type="date" id="registerDate" th:field="*{registerDate}" required />
+			<p th:errors="*{registerDate}" class="text-danger" th:if="${#fields.hasErrors('registerDate')}"></p>
+        </div>
+        <!-- Trạng thái (combobox) -->
+		<div>
+		    <label>Trạng thái:</label>
+			<div>
+			        <input type="radio" id="activeYes" name="isActive" value="true" 
+			               th:field="*{isActive}" 
+			               th:checked="*{isActive == true}" />
+			        <label for="activeYes">Yes</label>
+			    </div>
+				<div>
+				       <input type="radio" id="activeNo" name="isActive" value="false" 
+				              th:field="*{isActive}" 
+				              th:checked="*{isActive == null || isActive == false}" checked/>
+				       <label for="activeNo">No</label>
+				   </div>
+				   <p th:errors="*{isActive}" class="text-danger" th:if="${#fields.hasErrors('isActive')}"></p>
+		</div>
+        <!-- Loại sản phẩm (categoryid) -->
+        <div>
+            <label for="categoryID">Loại sản phẩm:</label>
+            <select id="categoryID" th:field="*{categoryID}">
+				
+                <option value="" disabled selected>-- Chọn loại sản phẩm --</option>
+                <option th:each="category : ${categories}" 
+                        th:value="${category.id}" 
+                        th:text="${category.name}"></option>
+            </select>
+			<p th:errors="*{categoryID}" class="text-danger" th:if="${#fields.hasErrors('categoryID')}"></p>
+        </div>
+        <!-- Button -->
+        <div>
+            <button type="submit" th:text="${product.id != null && product.id > 0 ? 'Cập nhật' : 'Lưu mới'}"></button>
+            <a th:href="@{/products}"><button type="button">Quay lại</button></a>
+        </div>
+    </form>
+</body>
+</html>

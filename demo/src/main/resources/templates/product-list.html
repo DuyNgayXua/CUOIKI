@@ -1,0 +1,97 @@
+<html xmlns:th="http://www.thymeleaf.org">	
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Danh sách sản phẩm</title>
+	<link th:href="@{~/styles/bootstrap.min.css}" rel="stylesheet">
+	<link th:href="@{~/styles/main.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div class="row col-md-20">
+		       <h2 class="text-center">Danh sách sản phẩm</h2>
+		   </div>
+		    <!-- Nút Thêm Sản Phẩm -->
+        <div class="mb-3 text-right">
+            <a th:href="@{/add}" class="btn btn-success">+ Thêm sản phẩm</a>
+        </div>
+
+    <form action="/search" method="get">
+        <input type="text" name="keyword" placeholder="Nhập từ khóa tìm kiếm" value="" />
+        <button type="submit">Tìm kiếm</button>
+		<br><br><br>
+	<!-- Loại sản phẩm (categoryid) -->
+	<form th:action="@{/products}" th:object="${product}" method="get" >
+	    <label for="categoryID">Category:</label>
+	    <select th:field="*{categoryID}">
+			<option value="" disabled selected>-- Chọn loại sản phẩm --</option>
+	        <option th:each="category : ${categories}" 
+	                th:value="${category.id}" 
+	                th:text="${category.name}">Category</option>
+	    </select>		
+		<!-- Trạng thái (combobox) -->
+			<div>
+			    <label>Trạng thái:</label>
+				<div>
+				        <input type="radio" id="activeYes" name="isActive" value="true" 
+				               th:field="*{isActive}" 
+				               th:checked="*{isActive == true}" />
+				        <label for="activeYes">Active</label>
+				    </div>
+					<div>
+					       <input type="radio" id="activeNo" name="isActive" value="false" 
+					              th:field="*{isActive}" 
+								  th:checked="*{isActive == false}"
+					            />
+					       <label for="activeNo">Not Active</label>
+					   </div>					  
+			</div>
+			<!-- Ngày đăng ký -->
+			       <div>
+			           <label for="registerDate">Chọn khoản ngày tìm kiếm:</label>
+			           <input type="date" id="registerDate" th:field="*{registerDate}" />
+					
+			       </div>
+				   <div>
+				              <button type="submit">Tìm kiếm</button>
+				            
+				          </div>
+	   
+	</form>
+	</form>
+    <table class="table table-bordered table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+				<th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+				<th>Mô tả</th>
+				<th>Trạng thái</th>
+				<th>Ngày đăng ký</th>
+				 <th>Thể loại</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+           <tr th:each = "product : ${products}">
+                    <td th:text = "${product.id}"></td>
+                    <td th:text = "${product.code}"></td>
+                    <td th:text = "${product.name}"></td>
+                    <td th:text = "${product.price}"></td>
+					<td th:text = "${product.description}"></td>
+					<td th:text = "${product.isActive ? 'Đang hoạt động' : 'Không còn hoạt động'}"></td>
+					<td th:text = "${product.registerDate}"></td>
+					<td th:text = "${product.categoryID.name}"></td>
+                    <td>                
+                        <a th:href="@{/edit/{id}(id=${product.id})}">Sửa</a> |
+                        <a th:href="@{/delete/{id}(id=${product.id})}" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</a>
+                    </td>
+                </tr>
+            
+        </tbody>
+    </table>
+
+	</div>
+</body>
+</html>
